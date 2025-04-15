@@ -54,6 +54,7 @@
 # if __name__ == "__main__":
 #     app.run(debug=True)
 
+#import all required libraries
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import networkx as nx
@@ -68,7 +69,7 @@ CORS(app, supports_credentials=True)
 
 print("connection established")
 
-# Load the road gainesville shapefile
+# load the road gainesville shapefile
 gainesville_shapefile_path = "./public/Gainesville/BetterGainesville.shp"
 gdf = gpd.read_file(gainesville_shapefile_path)
 
@@ -108,7 +109,7 @@ if gdf.crs is None:
     gdf.set_crs(epsg=4326, inplace=True)
 gdf = gdf.to_crs(epsg=4326)
 
-# # Create an empty NetworkX graph
+# create empty graph
 # G = nx.Graph()
 
 # # Extract road segment endpoints and add to graph
@@ -125,54 +126,52 @@ gdf = gdf.to_crs(epsg=4326)
 #             distance = Point(node1).distance(Point(node2))  # Euclidean distance
 #             G.add_edge(node1, node2, weight=distance)
 
-# Create an empty NetworkX graph
+# create empty nx graph (this works as an adjacency list)
 G = nx.Graph()
 
-# Dictionary to store unique nodes with a fast lookup
+# dictionary to store unique nodes
 node_dict = {}
 
-# List to store edges
+# edges storage
 edges = []
 
-# Extract road segment endpoints and add to graph
+# extract edges from data and put into the graph
 for _, row in gdf.iterrows():
     if isinstance(row.geometry, LineString):
-        coords = np.array(row.geometry.coords)  # Convert to NumPy array (faster)
+        coords = np.array(row.geometry.coords)  # convert to NumPy array which is faster
 
         for i in range(len(coords) - 1):
             node1, node2 = tuple(coords[i]), tuple(coords[i+1])
 
-            # Store unique nodes in a dictionary for fast lookups
+            # store unique nodes in a dictionary
             if node1 not in node_dict:
                 node_dict[node1] = node1
             if node2 not in node_dict:
                 node_dict[node2] = node2
 
-            # Compute Euclidean distance (faster than shapely Point.distance)
+            # get weights for each edge
             distance = np.linalg.norm(np.array(node1) - np.array(node2))
 
-            # Append edge to list
+            # add edge to list
             edges.append((node1, node2, distance))
 
-# Add all nodes in batch
+# add all edges to graph
 G.add_nodes_from(node_dict.keys())
-
-# Add all edges in batch
 G.add_weighted_edges_from(edges)
 
 print(f"Graph created with {len(G.nodes)} nodes and {len(G.edges)} edges.")
 
 
-# Convert node list to KDTree for fast nearest neighbor lookup
+# convert the node list to a KDTree for faster closest neighbor lookup
 node_list = list(node_dict.keys())
 kdtree = KDTree(node_list)
 
 def find_nearest_node(point):
     """Find the nearest graph node to a given lat/lon point."""
-    print(f"Querying for point: {point.x}, {point.y}")  # Debugging log
-    _, index = kdtree.query((point.x, point.y))  # Coordinates as (lon, lat)
+    print(f"Querying for point: {point.x}, {point.y}")  # print to console
+    _, index = kdtree.query((point.x, point.y))  # use kdtree.query this is a O(V) time complexity due to spindly tree
     nearest_node = node_list[index]
-    print(f"Found nearest node: {nearest_node}")  # Debugging log
+    print(f"Found nearest node: {nearest_node}")  # print to console
     return nearest_node
 
 @app.route("/")
@@ -186,24 +185,24 @@ def home():
 #         point1 = tuple(data["point1"])
 #         point2 = tuple(data["point2"])
 
-#         # Find nearest nodes
+#         # find nearest nodes
 #         node1 = find_nearest_node(Point(point1[1], point1[0]))
 #         node2 = find_nearest_node(Point(point2[1], point2[0]))
 
-#         print(f"Nearest nodes: {node1} and {node2}")  # Debugging log
+#         print(f"Nearest nodes: {node1} and {node2}")  # print to console
 
-#         # Compute shortest path
+#         # compute shortest path
 #         path = nx.shortest_path(G, node1, node2, weight="weight")
 
-#         print(f"Shortest path: {path}")  # Debugging log
+#         print(f"Shortest path: {path}")  # print to console
 
-#         # Convert path nodes to lat/lon
-#         path_coords = [[p[1], p[0]] for p in path]  # Convert to [lat, lon]
+#         # convert path nodes to lat/lon
+#         path_coords = [[p[1], p[0]] for p in path]  
 
 #         return jsonify({"path": path_coords})
 
 #     except Exception as e:
-#         print("Error:", str(e))  # Debugging log
+#         print("Error:", str(e))  # print to console
 #         return jsonify({"error": str(e)}), 500
     
 #DIJKSTRAS IMPLEMENTATION WITH LIST AND NO HEAP
@@ -237,14 +236,14 @@ def home():
 #                 path.append(node1)
 #                 path.reverse()
 
-#                 # Convert the path nodes to lat/lon
+#                 # convert the path nodes to lat/lon
 #                 path_coords = [[p[1], p[0]] for p in path]
 #                 return jsonify({"path": path_coords})
 
-#             # Remove current node from unvisited list
+#             # remove current node from unvisited list
 #             unvisited_nodes.remove(current_node)
 
-#             # Update distances to neighbors
+#             # update distances to neighbors
 #             for neighbor in G.neighbors(current_node):
 #                 weight = G[current_node][neighbor]['weight']
 #                 new_distance = distances[current_node] + weight
@@ -259,6 +258,7 @@ def home():
 #         return jsonify({"error": str(e)}), 500
 # 
 import heapq 
+# this is where the request is sent to when the App.tsx calls
 @app.route("/dijkstras", methods=["POST"])
 def dijkstras():
     try:
@@ -269,18 +269,18 @@ def dijkstras():
         node1 = find_nearest_node(Point(point1[1], point1[0]))
         node2 = find_nearest_node(Point(point2[1], point2[0]))
 
-        #Initialize distances to all nodes as infinity but the start node like before
+        # initialize distances to all nodes as infinity but the start node like before
         distances = {node: float('inf') for node in G.nodes()}
         previous_nodes = {node: None for node in G.nodes()}
         distances[node1] = 0
 
-        # Min-heap stores nodes based on shortest distance
+        # min-heap stores nodes based on shortest distance
         heap = [(0, node1)]  # (distance, node)
 
         while heap:
-            #Extract the node with the smallest current distance
+            #extract the node with the smallest current distance
             current_distance, current_node = heapq.heappop(heap)
-            #If the target end is reached, reconstruct the path like before
+            #if the target end is reached, reconstruct the path like before
             if current_node == node2:
                 path = []
                 while current_node is not None:
@@ -288,14 +288,14 @@ def dijkstras():
                     current_node = previous_nodes[current_node]
                 path.reverse()
 
-                # Convert path nodes to lat/lon like before
+                # convert path nodes to lat/lon like before
                 path_coords = [[p[1], p[0]] for p in path]
                 return jsonify({"path": path_coords})
 
-            # If the current distance is greater than the recorded one, skip processing
+            # if the current distance is greater than the recorded one, skip processing
             if current_distance > distances[current_node]:
                 continue
-            #For each of the neighbors to the current node, update the distances if a shorter path presents itself
+            #for each of the neighbors to the current node, update the distances if a shorter path presents itself
             #like before
             for neighbor in G.neighbors(current_node):
                 weight = G[current_node][neighbor]['weight']
@@ -309,7 +309,7 @@ def dijkstras():
         return jsonify({"error": "No path found"}), 404
 
     except Exception as e:
-        print("Error:", str(e))  # Debugging log
+        print("Error:", str(e))  # print to console
         return jsonify({"error": str(e)}), 500
     #NOTE the min-heap method performs far better,
     #the original method uses O(N^2) where N is the number of nodes because of curr_node = min(unvisited, node: distances)
