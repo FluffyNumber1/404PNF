@@ -22,6 +22,8 @@ Solution: We simulate real-world pathfinding by applying search algorithms to ac
 - Open the project folder in VS Code.
   
 - Open a new terminal inside VS Code.
+
+- Download the required dependencies for the frontend by running this in cmd: **npm install**
   
 - Run the following command to start the local development server: **npm run dev**
 
@@ -32,10 +34,12 @@ Solution: We simulate real-world pathfinding by applying search algorithms to ac
   
 - Run the Python server using: **python backend/server.py**
 
+- Wait until it outputs: **Debugger is active!**
+
 ## The Team
 
 Ryan Nadanam — UI/UX Frontend Structure & Dijkstra’s Implementation (FluffyNumber1)
 
 Kiran Nadanam — Map Interface, Data Extraction, Backend Integration (kirannadanam)
 
-Matthew Edelman — BFS & DFS Implementation
+Matthew Edelman — BFS & DFS Implementation 
