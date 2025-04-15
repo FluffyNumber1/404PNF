@@ -1,54 +1,33 @@
-# React + TypeScript + Vite
+# 404: Path Not Found!
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack web application that visualizes pathfinding algorithms (BFS, DFS, and Dijkstra's) on real-world map data. Built for exploring how different search strategies perform across different environments.
 
-Currently, two official plugins are available:
+## Project Summary 
+Problem: NPCs in open-world games often struggle with efficient pathfinding, leading to poor user experiences and performance issues.
+Solution: We simulate real-world pathfinding by applying search algorithms to actual map data using OpenStreetMap, providing a clean UI for comparison and visualization.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Data
+- Map data sourced from [OpenStreetMap](https://www.openstreetmap.org/)
+- Extracted using [BBBike](https://extract.bbbike.org/)
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 1. Install dependencies
+**Python packages:**
+pip install -r requirements.txt
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### 2. Start the Frontend
+  a)Open the project folder in VS Code.
+  b)Open a new terminal inside VS Code.
+  c)Run the following command to start the local development server: **npm run dev**
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 3. Start the Backend Server
+  a)Open another terminal (can be Command Prompt or PowerShell).
+  b)Navigate to the project directory (if you’re not already there).
+  c)Run the Python server using: **python backend/server.py**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## The Team
+👥 Team
+Ryan Nadanam — UI/UX Frontend Structure & Dijkstra’s Implementation (FluffyNumber1)
+Kiran Nadanam — Map Interface, Data Extraction, Backend Integration (kirannadanam)
+Matthew Edelman — BFS & DFS Implementation
