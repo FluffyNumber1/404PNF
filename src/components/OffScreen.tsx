@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ListGroup from "./ListGroup";
+//importing various icons for display
 import { FaMapLocationDot } from "react-icons/fa6";
 import { PiPathBold } from "react-icons/pi";
 import { MdTimer } from "react-icons/md";
@@ -7,19 +8,20 @@ import { GiPathDistance } from "react-icons/gi";
 import { LatLngExpression } from "leaflet";
 import { IoHome } from "react-icons/io5";
 
+// defining the prop types for the OffScreen component
 interface Props {
   onClose: () => void;
-  start: LatLngExpression[];
+  start: LatLngExpression[]; //coordinates for the start point
   destination: LatLngExpression[];
-  executionTime: string | null;
+  executionTime: string | null; //time taken for the pathfinding algorithm to execute
   numMarkers: number;
-  lengthPath: number | 0;
+  lengthPath: number | 0; //number of nodes in the found path
   pathNotFound: boolean;
-  distance: string | null;
+  distance: string | null; // distance of the path in miles
   startLocation: string | null;
   destinationLocation: string | null;
 }
-
+// functional component OffScreen displays search result info in the off-canvas sidebar
 const OffScreen = ({
   start,
   destination,
@@ -32,14 +34,15 @@ const OffScreen = ({
   startLocation,
   destinationLocation,
 }: Props) => {
-  let methods = ["Dijkstra's", "BFS", "DFS"];
+  let methods = ["Dijkstra's", "BFS", "DFS"]; // array of search method options
   const [selectedMethod, setSelectedMethod] = useState<string>("Dijkstra's");
 
   const handleSelectItem = (item: string) => {
-    setSelectedMethod(item);
+    setSelectedMethod(item); // useState to track selected search method
   };
 
   return (
+    /* off-canvas layout container, shown from the left, styled with Bootstrap and dark background */
     <>
       <div
         className="offcanvas offcanvas-start show bg-dark"

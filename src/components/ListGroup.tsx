@@ -1,13 +1,13 @@
 import "/src/App.css";
 import { useState } from "react";
-import { FaMagnifyingGlassLocation } from "react-icons/fa6";
+import { FaMagnifyingGlassLocation } from "react-icons/fa6"; // importing the FaMagnifyingGlassLocation icon from react-icons
 
 //{items: [], heading:string}
 interface Props {
   items: string[];
   heading: string;
   //function that takes a parameter called item of type string -> (item: string)=>void
-  onSelectItem: (item: string) => void;
+  onSelectItem: (item: string) => void; // 'onSelectItem' is a callback function that is invoked when an item is clicked
 }
 
 function ListGroup({ items, heading, onSelectItem }: Props) {
@@ -15,7 +15,7 @@ function ListGroup({ items, heading, onSelectItem }: Props) {
   const getMessage = () => {
     return items.length == 0 && <p>No item found</p>;
   };
-  //Empty angular brackets tells react to use a Fragment to be able to return multiple elements such as h1 and li
+  //empty angular brackets tells react to use a Fragment to be able to return multiple elements such as h1 and li
   return (
     <>
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -33,6 +33,7 @@ function ListGroup({ items, heading, onSelectItem }: Props) {
             }
             key={item}
             onClick={() => {
+              // updating the selected index and calling 'onSelectItem' callback with the clicked item
               setSelectedIndex(index);
               onSelectItem(item);
             }}
