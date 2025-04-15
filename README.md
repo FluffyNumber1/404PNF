@@ -19,18 +19,18 @@ Solution: We simulate real-world pathfinding by applying search algorithms to ac
 pip install -r requirements.txt
 
 ### 2. Start the Frontend
-  -Open the project folder in VS Code.
+- Open the project folder in VS Code.
   
-  -Open a new terminal inside VS Code.
+- Open a new terminal inside VS Code.
   
-  -Run the following command to start the local development server: **npm run dev**
+- Run the following command to start the local development server: **npm run dev**
 
 ### 3. Start the Backend Server
-  -Open another terminal (can be Command Prompt or PowerShell).
+- Open another terminal (can be Command Prompt or PowerShell).
   
-  -Navigate to the project directory (if you’re not already there).
+- Navigate to the project directory (if you’re not already there).
   
-  -Run the Python server using: **python backend/server.py**
+- Run the Python server using: **python backend/server.py**
 
 ## The Team
 👥 Team
