@@ -314,5 +314,74 @@ def dijkstras():
     #NOTE the min-heap method performs far better,
     #the original method uses O(N^2) where N is the number of nodes because of curr_node = min(unvisited, node: distances)
     #the new one is much faster in that regard. With the first method 1 million nodes would take 1 trillion operations. Not happening.
+
+@app.route("/bfs", methods=["POST"])
+def bfs():
+    try:
+        data = request.json
+        point1 = tuple(data["point1"])
+        point2 = tuple(data["point2"])
+
+        node1 = find_nearest_node(Point(point1[1], point1[0]))
+        node2 = find_nearest_node(Point(point2[1], point2[0]))
+
+        q = deque([(node1, [node1])]) #(current_node, [path])
+        visited = set() #tracks visited nodes
+
+        while q:
+            current_node, path = q.popleft()
+
+            if current_node == node2: #if target node is reached
+                path_coords = [[p[1], p[0]] for p in path] #converts node path from format (lat, lon) to [[lon, lat]]
+                return jsonify({"path": path_coords})
+
+            if current_node not in visited:
+                visited.add(current_node)
+
+                for neighbor in G.neighbors(current_node):
+                    if neighbor not in visited:
+                        new_path = path + [neighbor]
+                        q.append((neighbor, new_path))
+                       
+        return jsonify({"error": "No path found"}), 404
+
+    except Exception as e:
+        print("Error:", str(e))  # Debugging log
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/dfs", methods=["POST"])
+def dfs():
+    try:
+        data = request.json
+        point1 = tuple(data["point1"])
+        point2 = tuple(data["point2"])
+
+        node1 = find_nearest_node(Point(point1[1], point1[0]))
+        node2 = find_nearest_node(Point(point2[1], point2[0]))
+
+        stack = [(node1, [node1])] #(current_node, [path])
+        visited = set() #tracks visited nodes
+
+        while stack:
+            current_node, path = stack.pop()
+
+            if current_node == node2: #if target node is reached
+                path_coords = [[p[1], p[0]] for p in path] #converts node path from format (lat, lon) to [[lon, lat]]
+                return jsonify({"path": path_coords})
+
+            if current_node not in visited:
+                visited.add(current_node)
+                for neighbor in G.neighbors(current_node):
+                    if neighbor not in visited:
+                        stack.append((neighbor, path + [neighbor]))
+                       
+        return jsonify({"error": "No path found"}), 404
+
+    except Exception as e:
+        print("Error:", str(e))  # Debugging log
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == "__main__":
     app.run(debug=True)
