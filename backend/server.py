@@ -176,18 +176,34 @@ for _, row in gdf.iterrows():
             
             # get weights for each edge
             distance = haversine(node1, node2)
-
+            distance = round(distance, 6)
 
             # add edge to list only if the edge is proper (not a jump or an error)
             if distance<5:
                 edges.append((node1, node2, distance))
-                
+                if ((node2 == (-82.3682424, 29.6288011) and node1 == (-82.3313539, 29.6777634)) or (node1 == (-82.3682424, 29.6288011) and node2 == (-82.3313539, 29.6777634))):
+                    print(distance)
+                    print(distance)
+                    print(distance)
                 # store unique nodes in a dictionary
                 if node1 not in node_dict:
                     node_dict[node1] = node1
                 if node2 not in node_dict:
                     node_dict[node2] = node2
 edges.append(((-82.276725, 29.741686),(-82.276667, 29.741039),0.05)) # manually put back a key error point that isnt in the data
+edges.append(((-82.3307558, 29.686998),(-82.3307559, 29.6866266),0.05)) # manually put back a key error point that isnt in the data
+edges = [
+    e for e in edges if not (
+        (
+            (e[0] == (-82.3682424, 29.6288011) and e[1] == (-82.3313539, 29.6777634)) or
+            (e[1] == (-82.3682424, 29.6288011) and e[0] == (-82.3313539, 29.6777634))
+        ) or
+        (
+            (e[0] == (-82.3676, 29.629102) and e[1] == (-82.3313539, 29.6777634)) or
+            (e[1] == (-82.3676, 29.629102) and e[0] == (-82.3313539, 29.6777634))
+        )
+    )
+]#lines above removes bad things and not fun things that make me sad. sads times. not happys.
 
 # add all edges to graph
 G.add_nodes_from(node_dict.keys())
