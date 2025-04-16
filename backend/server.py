@@ -64,6 +64,8 @@ import pandas as pd
 import numpy as np
 from shapely.geometry import LineString, Point
 from scipy.spatial import KDTree
+from geopy.distance import geodesic
+import math
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -127,6 +129,33 @@ gdf = gdf.to_crs(epsg=4326)
 #             distance = Point(node1).distance(Point(node2))  # Euclidean distance
 #             G.add_edge(node1, node2, weight=distance)
 
+# this is the same function from the App.tsx just in python syntax now.
+def haversine(node1, node2):
+    R = 3958.8  # radius of earth in miles. if you want distance in other units, then change this to another unit.
+
+    lat1, lon1 = node1
+    lat2, lon2 = node2
+    # below is the haversine function that will get the distance between two coordinates
+    # d = 2 * R * asin(sqrt(a))
+    # a = sin²(Δlat/2) + cos(lat1) * cos(lat2) * sin²(Δlong/2)
+
+    # convert degrees to radians
+    lat1_rad = math.radians(lat1)
+    lon1_rad = math.radians(lon1)
+    lat2_rad = math.radians(lat2)
+    lon2_rad = math.radians(lon2)
+
+    # differences
+    diff_lat = lat2_rad - lat1_rad
+    diff_lon = lon2_rad - lon1_rad
+
+    # haversine formula
+    a = (math.sin(diff_lat / 2) ** 2 +
+         math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(diff_lon / 2) ** 2)
+    d = 2 * R * math.asin(math.sqrt(a))
+
+    return d
+
 # create empty nx graph (this works as an adjacency list)
 G = nx.Graph()
 
@@ -144,17 +173,21 @@ for _, row in gdf.iterrows():
         for i in range(len(coords) - 1):
             node1, node2 = tuple(coords[i]), tuple(coords[i+1])
 
-            # store unique nodes in a dictionary
-            if node1 not in node_dict:
-                node_dict[node1] = node1
-            if node2 not in node_dict:
-                node_dict[node2] = node2
-
+            
             # get weights for each edge
-            distance = np.linalg.norm(np.array(node1) - np.array(node2))
+            distance = haversine(node1, node2)
 
-            # add edge to list
-            edges.append((node1, node2, distance))
+
+            # add edge to list only if the edge is proper (not a jump or an error)
+            if distance<5:
+                edges.append((node1, node2, distance))
+                
+                # store unique nodes in a dictionary
+                if node1 not in node_dict:
+                    node_dict[node1] = node1
+                if node2 not in node_dict:
+                    node_dict[node2] = node2
+edges.append(((-82.276725, 29.741686),(-82.276667, 29.741039),0.05)) # manually put back a key error point that isnt in the data
 
 # add all edges to graph
 G.add_nodes_from(node_dict.keys())

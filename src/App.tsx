@@ -92,9 +92,9 @@ function findDistance(path: LatLngExpression[]): number {
 }
 
 function App() {
- //handle selection of the algo method used
- const [selectedMethod, setSelectedMethod] = useState("Dijkstra's");
- console.log("Selected Method:", selectedMethod);
+  //handle selection of the algo method used
+  const [selectedMethod, setSelectedMethod] = useState("Dijkstra's");
+  console.log("Selected Method:", selectedMethod);
 
   // markers
   const [markers, setMarker] = useState<LatLngExpression[]>([]);
@@ -185,19 +185,18 @@ function App() {
       let url = "";
 
       console.log("Algo selected is: " + selectedMethod);
-      if(selectedMethod == "Dijkstra's"){
+      if (selectedMethod == "Dijkstra's") {
         url = base_url + "dijkstras";
         //console.log("Dijkstras loaded!")
-      }else if(selectedMethod == "BFS"){
+      } else if (selectedMethod == "BFS") {
         url = base_url + "bfs";
         //console.log("BFS loaded!")
-      }else if(selectedMethod == "DFS"){
+      } else if (selectedMethod == "DFS") {
         url = base_url + "dfs";
         //console.log("DFS loaded!")
-      }else{
+      } else {
         //console.log("Method did not load :(")
       }
-
 
       const response = await fetch(url, {
         method: "POST",
