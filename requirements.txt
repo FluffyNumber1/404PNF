@@ -1,0 +1,9 @@
+Flask
+flask-cors
+networkx
+geopandas
+pandas
+numpy
+shapely
+scipy
+geopy
