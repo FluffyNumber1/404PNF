@@ -230,6 +230,10 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    fetchShortestPath();
+  }, [selectedMethod]);
+
   return (
     <>
       <MapContainer
