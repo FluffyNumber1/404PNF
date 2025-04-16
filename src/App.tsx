@@ -92,6 +92,10 @@ function findDistance(path: LatLngExpression[]): number {
 }
 
 function App() {
+ //handle selection of the algo method used
+ const [selectedMethod, setSelectedMethod] = useState("Dijkstra's");
+ console.log("Selected Method:", selectedMethod);
+
   // markers
   const [markers, setMarker] = useState<LatLngExpression[]>([]);
   const [shortestPath, setShortestPath] = useState<LatLngExpression[]>([]);
@@ -176,7 +180,26 @@ function App() {
         console.log(destinationLocation);
       }
 
-      const response = await fetch("http://127.0.0.1:5000/dijkstras", {
+      //select the correct URL based off the algorithm
+      let base_url = "http://127.0.0.1:5000/";
+      let url = "";
+
+      console.log("Algo selected is: " + selectedMethod);
+      if(selectedMethod == "Dijkstra's"){
+        url = base_url + "dijkstras";
+        //console.log("Dijkstras loaded!")
+      }else if(selectedMethod == "BFS"){
+        url = base_url + "bfs";
+        //console.log("BFS loaded!")
+      }else if(selectedMethod == "DFS"){
+        url = base_url + "dfs";
+        //console.log("DFS loaded!")
+      }else{
+        //console.log("Method did not load :(")
+      }
+
+
+      const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ point1: markers[0], point2: markers[1] }),
@@ -275,6 +298,8 @@ function App() {
             distance={distance}
             startLocation={startLocation}
             destinationLocation={destinationLocation}
+            selectedMethod={selectedMethod}
+            setSelectedMethod={setSelectedMethod}
           />
         ) : (
           <Button

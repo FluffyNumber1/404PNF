@@ -20,6 +20,8 @@ interface Props {
   distance: string | null; // distance of the path in miles
   startLocation: string | null;
   destinationLocation: string | null;
+  selectedMethod : string | null;
+  setSelectedMethod: React.Dispatch<React.SetStateAction<string>>//type for a function in react
 }
 // functional component OffScreen displays search result info in the off-canvas sidebar
 const OffScreen = ({
@@ -33,9 +35,10 @@ const OffScreen = ({
   distance,
   startLocation,
   destinationLocation,
+  selectedMethod,
+  setSelectedMethod,
 }: Props) => {
   let methods = ["Dijkstra's", "BFS", "DFS"]; // array of search method options
-  const [selectedMethod, setSelectedMethod] = useState<string>("Dijkstra's");
 
   const handleSelectItem = (item: string) => {
     setSelectedMethod(item); // useState to track selected search method
