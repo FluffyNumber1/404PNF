@@ -42,4 +42,4 @@ Ryan Nadanam — UI/UX Frontend Structure & Dijkstra’s Implementation (FluffyN
 
 Kiran Nadanam — Map Interface, Data Extraction, Backend Integration (kirannadanam)
 
-Matthew Edelman — BFS & DFS Implementation 
+Matthew Edelman — BFS & DFS Implementation (mattedelman) 
